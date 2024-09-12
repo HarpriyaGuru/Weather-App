@@ -1,1 +1,3 @@
 # Weather-App
+Authoe:Harpriya Guru
+About Weather-App : This app is a digital tool designed to provide users with up-to-date and accurate weather information, helping them plan their day or week accordingly. Typically, these apps offer real-time weather forecasts, detailed hourly and daily conditions, and alerts for severe weather events. Features often include radar maps, satellite imagery also integrate additional data such as air quality indices and pollen counts, making them comprehensive resources for not just planning outdoor activities, but also managing health and safety in varying weather conditions.
