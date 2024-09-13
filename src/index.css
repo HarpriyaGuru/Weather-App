@@ -11,10 +11,10 @@
 body{
     height: 100%;
     width: 100%;
-    background-color: black;
+    background:url("../images/main.jpg");
     color: white;
     font-size: 1.5rem;
-    line-height: 1.5;
+    line-height: 1.8;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 /* ----------------------------------------header--------------------------------------------------------- */
@@ -36,14 +36,9 @@ header nav ul li:hover{
     color: var(--red);
     cursor: pointer;
 }
-header form{
-    display: flex;
-    padding: 0.5rem;
-
-}
-header form input
-{
+header form input{
     font-size: 1.5rem;
+    color: black;
 }
 header form button
 {
@@ -55,18 +50,14 @@ header form button
 }
 /* ----------------------------------main-------------------------------------------------- */
 main{
-    height: 50vh;
-    background:url("../images/main.jpg");
     font-size: 3rem;
 }
-
 main input{
     font-size: 1.5rem;
-    padding: 0.1rem;
+    color: black;
 }
 main button{
     font-size: 1.5rem;
-    padding: 0.2rem;
     background-color: var(--red);
     color: white;
     cursor: pointer;

@@ -25,19 +25,36 @@
             <li>Contact</li>
         </ul>
     </nav>
-        <form >
+        <form class="flex p-1" >
         <input type="search" placeholder="Enter City Name">
-        <button>Search</button>
+        <button class="hover:bg-red-800">Search</button>
         </form>
-        <!-- <i class="fa-solid fa-magnifying-glass-location"></i> -->
 </header>
     <main class="text-center">
-        <h1>Discover the weather in your city</h1>
-        <input type="search" placeholder="Enter City Name">
-        <button>Search</button>
+        <h1 class="font-extrabold">Discover the weather in your city</h1>
+        <input type="search" placeholder="Enter City Name" class="p-1 " id="city">
+        <button class="p-1 hover:bg-red-800" onclick="submitCity()">Search</button>
     </main>
+    <section id="main-cities">
+        <h2 class=" my-10 mx-auto font-semibold text-3xl p-2 text-center ">Weather of main cities</h2>
+        <div class="cards flex flex-wrap justify-between items-center gap-2 my-10 mx-auto w-9/12 bg-opacity-20" id="cards">
+             <div class="card1 border p-8 rounded-2xl shadow-lg  shadow-white">
+                <h2 class="text-center">Delhi</h2>
+                <ul id="card">
+                    <li>
+                        "sunrise":1684926645,
+                    </li>
+                    <li>
+                        "sunset":1684977332,
+                    </li>
+                    <li>
+                        "temp":292.55,
+                    </li>
+                </ul>
+             </div>
+        </div>
+    </section>
     <footer>
-   <h1 class="underline font-bold">tailwind</h1>
         <div class="links">
             <h3>Links</h3>
             <ul >
@@ -47,5 +64,48 @@
             </ul>
     </div>
     </footer>
-</body>    
+</body>  
+<script>
+  
+  async function submitCity() {
+    const city = document.getElementById("city").value;
+    const card = document.getElementById("card");
+
+    try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=11c489bfdde523df244cb9378c2ee7b8`);
+        
+        if (!response.ok) {
+            throw new Error(`Network issue: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Map through the list and create HTML elements
+        card.innerHTML = data.list.map((weather) => {
+            console.log(weather.main);
+            
+            const date = new Date(weather.dt * 1000).toLocaleDateString();
+            const temp = weather.main.temp;
+            const description = weather.weather[0].description;
+            const icon = `http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`;
+
+            return `
+                <div class="bg-white text-slate-900 p-4 rounded-lg shadow mb-4">
+                    <h3 class="text-lg font-bold">${date}</h3>
+                    <img src="${icon}" alt="${description}" class="w-12 h-12">
+                    <p class="text-xl">${temp}°C</p>
+                    <p>${description}</p>
+                </div>
+            `;
+        }).join(''); // Join the array into a single string
+
+    } catch (error) {
+        // Handle errors if they occur
+        card.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
+    }
+}
+
+      
+    
+</script>  
 </html>
