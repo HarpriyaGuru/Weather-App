@@ -4,108 +4,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Harpriya Guru">
-    <meta name="description" content="it's a digital tool designed to provide users with up-to-date and accurate weather information">
-    <meta name="keywords" content="Weather Forecast,Weather Conditions,Weather Trends">
+    <meta name="description" content="It's a digital tool designed to provide users with up-to-date and accurate weather information">
+    <meta name="keywords" content="Weather Forecast, Weather Conditions, Weather Trends">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="index.css">
     <link href="./output.css" rel="stylesheet">
-
     <title>Weather App</title>
-    <style>
-       
-    </style>
 </head>
 <body>
-    <header class="flex ">
-        <img  src="../images/logo.png" alt="Skywatch">
-    <nav>
-        <ul class="flex list-none">
-            <li>Home</li>
-            <li>About</li>
-            <li>Contact</li>
-        </ul>
-    </nav>
-        <form class="flex p-1" >
-        <input type="search" placeholder="Enter City Name">
-        <button class="hover:bg-red-800">Search</button>
-        </form>
-</header>
+    <header class="flex">
+        <img src="../images/logo.png" alt="Skywatch">
+        <nav>
+            <ul class="flex list-none">
+                <li>Home</li>
+                <li>About</li>
+                <li>Contact</li>
+            </ul>
+        </nav>
+        <img src="../images/logo.png" alt="Skywatch">
+    </header>
     <main class="text-center">
         <h1 class="font-extrabold">Discover the weather in your city</h1>
-        <input type="search" placeholder="Enter City Name" class="p-1 " id="city">
+        <input type="search" placeholder="Enter City Name" class="p-1" id="city">
         <button class="p-1 hover:bg-red-800" onclick="submitCity()">Search</button>
     </main>
     <section id="main-cities">
-        <h2 class=" my-10 mx-auto font-semibold text-3xl p-2 text-center ">Weather of main cities</h2>
-        <div class="cards flex flex-wrap justify-between items-center gap-2 my-10 mx-auto w-9/12 bg-opacity-20" id="cards">
-             <div class="card1 border p-8 rounded-2xl shadow-lg  shadow-white">
-                <h2 class="text-center">Delhi</h2>
-                <ul id="card">
-                    <li>
-                        "sunrise":1684926645,
-                    </li>
-                    <li>
-                        "sunset":1684977332,
-                    </li>
-                    <li>
-                        "temp":292.55,
-                    </li>
-                </ul>
-             </div>
+        <div class="cards flex flex-wrap justify-between items-center gap-2 my-10 mx-auto w-9/12 " id="cards">
+            <!-- from js -->
         </div>
+        <!-- <div class="description m-5 p-8 rounded-2xl shadow-lg shadow-white opacity-50 border-2 border-slate-600 bg-slate-50">
+            i am description
+            <div class="weatherReport" id="weatherReport"></div>
+        </div> -->
     </section>
-    <footer>
-        <div class="links">
-            <h3>Links</h3>
-            <ul >
-            <li>Home</li>
-            <li>About</li>
-            <li>Contact</li>
-            </ul>
-    </div>
-    </footer>
-</body>  
-<script>
-  
-  async function submitCity() {
-    const city = document.getElementById("city").value;
-    const card = document.getElementById("card");
+    <script>
+        function submitCity() {
+            const city = document.getElementById("city").value;
+            const weatherReport = document.getElementById("weatherReport");
 
-    try {
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=11c489bfdde523df244cb9378c2ee7b8`);
-        
-        if (!response.ok) {
-            throw new Error(`Network issue: ${response.status} ${response.statusText}`);
+            if (!city) {
+                weatherReport.innerHTML = "Please enter a valid city name.";
+                return;
+            }
+            fetchCurrentWeather(city);
         }
 
-        const data = await response.json();
+        async function fetchCurrentWeather(city) {
+            const weatherReport = document.getElementById("weatherReport");
+            const API = "a562058c790d145fb8252a7b0b5ed5b8";
+            const CurrentWeather = `https://api.openweathermap.org/data/2.5/weather?appid=${API}&q=${city}&units=metric`;
 
-        // Map through the list and create HTML elements
-        card.innerHTML = data.list.map((weather) => {
-            console.log(weather.main);
-            
-            const date = new Date(weather.dt * 1000).toLocaleDateString();
-            const temp = weather.main.temp;
-            const description = weather.weather[0].description;
-            const icon = `http://openweathermap.org/img/wn/${weather.weather[0].icon}.png`;
+            try {
+                const response = await fetch(CurrentWeather);
 
-            return `
-                <div class="bg-white text-slate-900 p-4 rounded-lg shadow mb-4">
-                    <h3 class="text-lg font-bold">${date}</h3>
-                    <img src="${icon}" alt="${description}" class="w-12 h-12">
-                    <p class="text-xl">${temp}°C</p>
-                    <p>${description}</p>
-                </div>
-            `;
-        }).join(''); // Join the array into a single string
+                if (!response.ok) {
+                    throw new Error("Network response was not ok.");
+                }
 
-    } catch (error) {
-        // Handle errors if they occur
-        card.innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
-    }
-}
+                const data = await response.json();
 
-      
-    
-</script>  
+                if (data.cod !== 200) {
+                    weatherReport.innerHTML = "City not found. Please enter a valid city name.";
+                    return;
+                }
+
+                const sideCard = document.createElement('div');
+                sideCard.className = "side-bar border p-8 rounded-2xl shadow-lg shadow-white text-center";
+                sideCard.innerHTML = `
+                    <img class="weatherIcon m-auto" src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="Weather Icon">
+                    <div class="city">${data.name}, ${data.sys.country}</div>
+                    <h2 class="temperature font-extrabold">${data.main.temp} °C</h2>
+                    <div class="feelsLike">Feels like: ${data.main.feels_like} °C</div>
+                    <div class="description" id="desc">${data.weather[0].description}</div>
+                    <div class="date font-bold">${new Date(data.dt * 1000).toLocaleString()}</div>
+                `;
+
+                const cardsContainer = document.getElementById("cards");
+                cardsContainer.innerHTML = ""; // Clear previous content
+                cardsContainer.appendChild(sideCard);
+// full details
+const fullDetail = document.createElement("div");
+fullDetail.className= "side-bar border p-8 rounded-2xl shadow-lg shadow-white text-center w-100";
+fullDetail.innerHTML = `
+    <h2 class="heading">Today's Highlights</h2>
+    <div class="highlights">
+        <div class="humidity">
+            Humidity
+            <i class="fa-solid fa-water"></i>  
+            <h1 id="HValue">${data.main.humidity}%</h1>
+        </div>
+
+        <div class="wind-speed">
+            Wind Speed
+            <i class="fa-solid fa-wind"></i>  
+            <h1 id="WValue">${data.wind.speed} m/s</h1>
+        </div>
+        
+        <div class="sun">
+            <span>
+                <i class="fa-regular fa-sun"></i>  
+                <p><span id="SRValue">${new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</span> Sunrise</p>
+            </span>
+            <span>
+                <i class="fa-regular fa-sun"></i>  
+                <p><span id="SSValue">${new Date(data.sys.sunset * 1000).toLocaleTimeString()}</span> Sunset</p>
+            </span>
+        </div>
+
+        <div class="clouds">
+            Clouds
+            <i class="fa-solid fa-cloud"></i>  
+            <h1 id="CValue">${data.clouds.all}%</h1>
+        </div>
+
+        <div class="visibility">
+            Visibility
+            <i class="fa-solid fa-eye"></i>  
+            <h1 id="VValue">${data.visibility / 1000} km</h1>
+        </div>
+
+        <div class="pressure">
+            Pressure
+            <i class="fa-solid fa-thermometer-three-quarters"></i>  
+            <h1 id="PValue">${data.main.pressure} hPa</h1>
+        </div>
+        
+        <h1 class="heading">This Week</h1>
+    </div>
+`;
+cardsContainer.appendChild(fullDetail);
+
+            } catch (error) {
+                weatherReport.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
 </html>

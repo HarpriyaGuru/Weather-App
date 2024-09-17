@@ -62,15 +62,19 @@ main button{
     color: white;
     cursor: pointer;
 }
-/* ------------------------------------footer------------------------------------------ */
-footer{
-    background-color: var(--grey);
-    padding: 3rem;
+.side-bar{
+    background-color: skyblue;
+    border: 1px solid gray;
+    /* opacity: 0.5; */
+    color: black;
 }
-footer h3{
-    color: var(--red);
+.description{
+    color: black;
 }
-footer ul{
-    list-style-type: none;
-    font-size: 1rem;
+.weatherIcon {
+    width: 100px;
+    height: 100px;
+    /* margin: auto; */
 }
+
+
