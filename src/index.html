@@ -1,3 +1,5 @@
+<!-- GitHub location "https://github.com/HarpriyaGuru/Weather-App" -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,117 +29,22 @@
         <h1 class="font-extrabold">Discover the weather in your city</h1>
         <input type="search" placeholder="Enter City Name" class="p-1" id="city">
         <button class="p-1 hover:bg-red-800" onclick="submitCity()">Search</button>
+        <button class="p-1 hover:bg-red-800" id="CurrentLocation">My Location</button>
     </main>
-    <section id="main-cities">
-        <div class="cards flex flex-wrap justify-between items-center gap-2 my-10 mx-auto w-9/12 " id="cards">
+    <section id="main-cities w-full flex">
+        <div class="cards flex flex-wrap justify-between items-center gap-2 my-10 mx-auto w-10/12 h-4/5" id="cards">
+            <!-- from js -->
+    
+
             <!-- from js -->
         </div>
-        <!-- <div class="description m-5 p-8 rounded-2xl shadow-lg shadow-white opacity-50 border-2 border-slate-600 bg-slate-50">
-            i am description
-            <div class="weatherReport" id="weatherReport"></div>
-        </div> -->
-    </section>
-    <script>
-        function submitCity() {
-            const city = document.getElementById("city").value;
-            const weatherReport = document.getElementById("weatherReport");
 
-            if (!city) {
-                weatherReport.innerHTML = "Please enter a valid city name.";
-                return;
-            }
-            fetchCurrentWeather(city);
-        }
-
-        async function fetchCurrentWeather(city) {
-            const weatherReport = document.getElementById("weatherReport");
-            const API = "a562058c790d145fb8252a7b0b5ed5b8";
-            const CurrentWeather = `https://api.openweathermap.org/data/2.5/weather?appid=${API}&q=${city}&units=metric`;
-
-            try {
-                const response = await fetch(CurrentWeather);
-
-                if (!response.ok) {
-                    throw new Error("Network response was not ok.");
-                }
-
-                const data = await response.json();
-
-                if (data.cod !== 200) {
-                    weatherReport.innerHTML = "City not found. Please enter a valid city name.";
-                    return;
-                }
-
-                const sideCard = document.createElement('div');
-                sideCard.className = "side-bar border p-8 rounded-2xl shadow-lg shadow-white text-center";
-                sideCard.innerHTML = `
-                    <img class="weatherIcon m-auto" src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="Weather Icon">
-                    <div class="city">${data.name}, ${data.sys.country}</div>
-                    <h2 class="temperature font-extrabold">${data.main.temp} °C</h2>
-                    <div class="feelsLike">Feels like: ${data.main.feels_like} °C</div>
-                    <div class="description" id="desc">${data.weather[0].description}</div>
-                    <div class="date font-bold">${new Date(data.dt * 1000).toLocaleString()}</div>
-                `;
-
-                const cardsContainer = document.getElementById("cards");
-                cardsContainer.innerHTML = ""; // Clear previous content
-                cardsContainer.appendChild(sideCard);
-// full details
-const fullDetail = document.createElement("div");
-fullDetail.className= "side-bar border p-8 rounded-2xl shadow-lg shadow-white text-center w-100";
-fullDetail.innerHTML = `
-    <h2 class="heading">Today's Highlights</h2>
-    <div class="highlights">
-        <div class="humidity">
-            Humidity
-            <i class="fa-solid fa-water"></i>  
-            <h1 id="HValue">${data.main.humidity}%</h1>
+        <div class="forecastWeather">
+            <h2>this Week</h2>
+            <!-- <div class="weatherReport" id="weatherReport"></div> -->
         </div>
-
-        <div class="wind-speed">
-            Wind Speed
-            <i class="fa-solid fa-wind"></i>  
-            <h1 id="WValue">${data.wind.speed} m/s</h1>
-        </div>
-        
-        <div class="sun">
-            <span>
-                <i class="fa-regular fa-sun"></i>  
-                <p><span id="SRValue">${new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</span> Sunrise</p>
-            </span>
-            <span>
-                <i class="fa-regular fa-sun"></i>  
-                <p><span id="SSValue">${new Date(data.sys.sunset * 1000).toLocaleTimeString()}</span> Sunset</p>
-            </span>
-        </div>
-
-        <div class="clouds">
-            Clouds
-            <i class="fa-solid fa-cloud"></i>  
-            <h1 id="CValue">${data.clouds.all}%</h1>
-        </div>
-
-        <div class="visibility">
-            Visibility
-            <i class="fa-solid fa-eye"></i>  
-            <h1 id="VValue">${data.visibility / 1000} km</h1>
-        </div>
-
-        <div class="pressure">
-            Pressure
-            <i class="fa-solid fa-thermometer-three-quarters"></i>  
-            <h1 id="PValue">${data.main.pressure} hPa</h1>
-        </div>
-        
-        <h1 class="heading">This Week</h1>
     </div>
-`;
-cardsContainer.appendChild(fullDetail);
-
-            } catch (error) {
-                weatherReport.innerHTML = `Error: ${error.message}`;
-            }
-        }
-    </script>
+    </section>
+    <script src="index.js"></script>
 </body>
 </html>
