@@ -20,54 +20,16 @@ body{
 /* ----------------------------------------header--------------------------------------------------------- */
 header{
     background-color: var(--grey);
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 0.2rem;
-}
-header img{
-    height: 5rem;
-    width: 15rem;
-}
-header nav ul{
-  gap: 3rem;
-}
-header nav ul li:hover{
-    color: var(--red);
-    cursor: pointer;
-}
-header form input{
-    font-size: 1.5rem;
-    color: black;
-}
-header form button
-{
-    font-size: 1.5rem;
-    padding: 0.2rem;
-    background-color: var(--red);
-    color: white;
-    cursor: pointer;
 }
 /* ----------------------------------main-------------------------------------------------- */
-main{
-    font-size: 3rem;
-}
-main input{
-    font-size: 1.5rem;
-    color: black;
-}
-main button{
-    font-size: 1.5rem;
-    background-color: var(--red);
-    color: white;
-    cursor: pointer;
-}
+
 .side-bar{
     background-color: skyblue;
     border: 1px solid gray;
-    /* opacity: 0.5; */
     color: black;
 }
-
-
-
+.forecast-item{
+    background-color: skyblue;
+    text-align: center;
+    color: black;
+}

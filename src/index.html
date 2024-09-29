@@ -14,34 +14,35 @@
     <title>Weather App</title>
 </head>
 <body>
-    <header class="flex">
-        <img src="../images/logo.png" alt="Skywatch">
-        <nav>
-            <ul class="flex list-none">
-                <li>Home</li>
-                <li>About</li>
-                <li>Contact</li>
-            </ul>
-        </nav>
-        <img src="../images/logo.png" alt="Skywatch">
+    <header class="flex justify-around h-25 p-2">
+        <img src="../images/logo.png" alt="Skywatch" height="100px" width="250px">
+        <h1 class="m-5 ">It's a digital tool designed to provide up-to-date and accurate weather information</h1>
     </header>
     <main class="text-center">
-        <h1 class="font-extrabold">Discover the weather in your city</h1>
-        <input type="search" placeholder="Enter City Name" class="p-1" id="city">
-        <button class="p-1 hover:bg-red-800" onclick="submitCity()">Search</button>
-        <button class="p-1 hover:bg-red-800" id="CurrentLocation">My Location</button>
+        <h2 class=" p-3 m-10 font-extrabold text-5xl">Discover the weather in your city</h2>
+        <div class="search flex justify-center text-black ">
+        <input type="search" placeholder="Enter City Name" class="p-3 w-80 relative" id="city">
+        <div class="dropdown" id="dropdown" style="display: none;">
+            <!-- from js -->
+           </div>
+        <button class="p-2 bg-white hover:bg-red-300" onclick="submitCity()">
+            <img src="../images/search.png" alt="search" height="30px" width="30px">
+        </button>
+        <button class="p-2 bg-white hover:bg-green-400" id="CurrentLocation">
+            <img src="../images/loc.png" alt=" My Location" height="30px" width="30px"> 
+        </button>
+    </div>
     </main>
-    <section id="main-cities w-full flex">
-        <div class="cards flex flex-wrap justify-between items-center gap-2 my-10 mx-auto w-10/12 h-4/5" id="cards">
+    <section>
+        <div class=" cards flex flex-wrap gap-16 justify-start items-center my-10 mx-auto w-11/12 h-4/5 " id="cards">
             <!-- from js -->
     
 
             <!-- from js -->
         </div>
 
-        <div class="forecastWeather">
-            <h2>this Week</h2>
-            <!-- <div class="weatherReport" id="weatherReport"></div> -->
+        <div class="forecastWeather cards flex justify-around items-center gap-2 my-10 mx-auto w-11/12 h-1/4 overflow-x-auto">
+            <!-- from js -->
         </div>
     </div>
     </section>
