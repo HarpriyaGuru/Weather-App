@@ -14,38 +14,35 @@
     <title>Weather App</title>
 </head>
 <body>
-    <header class="flex justify-around h-25 p-2">
+    <header class="flex justify-around h-25 p-2 flex-wrap ">
         <img src="../images/logo.png" alt="Skywatch" height="100px" width="250px">
-        <h1 class="m-5 ">It's a digital tool designed to provide up-to-date and accurate weather information</h1>
+        <h1 class="m-5 text-justify ">It's a digital tool designed to provide up-to-date and accurate weather information</h1>
     </header>
-    <main class="text-center">
-        <h2 class=" p-3 m-10 font-extrabold text-5xl">Discover the weather in your city</h2>
-        <div class="search flex justify-center text-black ">
-        <input type="search" placeholder="Enter City Name" class="p-3 w-80 relative" id="city">
-        <div class="dropdown" id="dropdown" style="display: none;">
-            <!-- from js -->
-           </div>
-        <button class="p-2 bg-white hover:bg-red-300" onclick="submitCity()">
-            <img src="../images/search.png" alt="search" height="30px" width="30px">
-        </button>
-        <button class="p-2 bg-white hover:bg-green-400" id="CurrentLocation">
-            <img src="../images/loc.png" alt=" My Location" height="30px" width="30px"> 
-        </button>
-    </div>
-    </main>
-    <section>
-        <div class=" cards flex flex-wrap gap-16 justify-start items-center my-10 mx-auto w-11/12 h-4/5 " id="cards">
-            <!-- from js -->
-    
-
-            <!-- from js -->
+    <main class="text-center p-4">
+        <h2 class="p-3 mb-10 font-extrabold text-3xl md:text-5xl">Discover the weather in your city</h2>
+        <div class="relative mb-4"> <!-- Added relative positioning here -->
+            <div class="search flex justify-center">
+                <input type="search" placeholder="Enter City Name" class="text-black p-3 w-72 md:w-80 border border-gray-300 " id="city" onclick="dropdown()">
+                <button class="p-2 bg-white hover:bg-red-300  " onclick="submitCity()">
+                    <img src="../images/search.png" alt="search" height="30" width="30">
+                </button>
+                <button class="p-2 bg-white hover:bg-green-400" id="CurrentLocation">
+                    <img src="../images/loc.png" alt="My Location" height="30" width="30"> 
+                </button>
+            </div>
+            <div class="dropdown absolute left-[34%] w-[25%] max-md:w-[50%]  right-0 mt-1" id="dropdown" style="display: none;"></div>
         </div>
-
-        <div class="forecastWeather cards flex justify-around items-center gap-2 my-10 mx-auto w-11/12 h-1/4 overflow-x-auto">
-            <!-- from js -->
+    </main>
+    <section class="flex  flex-wrap justify-between items-center ">
+        <div class=" cards  my-10 mx-auto w-full gap-2 h-4/5 flex flex-wrap  justify-start items-center md:gap-0 md:my-5" id="cards">
+            <div class="weatherReport xl:mx-[20rem] text-3xl  text-red-300 text-center md:text-center md:mx-52" id="weatherReport">
+            </div>
+        </div>
+        <div class="forecastWeather cards flex justify-around items-center gap-2 my-5 mx-auto w-10/12 h-1/4 overflow-x-auto" id="forecastWeather">
         </div>
     </div>
     </section>
+
     <script src="index.js"></script>
 </body>
 </html>
