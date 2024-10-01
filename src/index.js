@@ -13,17 +13,24 @@ function submitCity() {
 function dropdown() {
     const cityInput = document.getElementById("city");
     const dropdown = document.getElementById("dropdown");
-    const cityList = JSON.parse(localStorage.getItem("cityList")) || [];
+    let cityList;
+
+    try {
+        cityList = JSON.parse(localStorage.getItem("cityList")) || [];
+    } catch (e) {
+        console.error("Failed to parse cityList from localStorage:", e);
+        cityList = [];
+    }
 
     function updateDropdown(filteredList) {
-        dropdown.innerHTML = `<ul class="flex flex-col bg-red-600 cursor-pointer text-white border border-gray-300 rounded w-[30%]">
+        dropdown.innerHTML = `<ul class="flex flex-col bg-red-600 cursor-pointer text-white border border-gray-300 rounded w-[80%]">
             ${filteredList.map(city => `<li class="border-b border-white p-2 hover:bg-red-700" onclick="inputValue('${city}')">${city}</li>`).join('')}
         </ul>`;
         dropdown.style.display = filteredList.length ? "block" : "none"; 
     }
 
     function onFocus() {
-        const city = cityInput.value;
+        const city = cityInput.value.trim();
         if (city && !cityList.includes(city)) {
             cityList.push(city);
             localStorage.setItem("cityList", JSON.stringify(cityList));
@@ -32,63 +39,80 @@ function dropdown() {
     }
 
     function onInput() {
-        const searchValue = cityInput.value.toLowerCase();
+        const searchValue = cityInput.value.toLowerCase().trim();
         const filteredList = cityList.filter(city => city.toLowerCase().includes(searchValue));
         updateDropdown(filteredList);
     }
 
     function removeFocus() {
         setTimeout(() => {
-            if (!dropdown.contains(document.activeElement)) {
+            if (!dropdown.contains(document.activeElement) && document.activeElement !== cityInput) {
                 dropdown.style.display = "none"; 
             }
         }, 100);
     }
 
-    cityInput.addEventListener("focus", onFocus);
-    cityInput.addEventListener("input", onInput);
-    cityInput.addEventListener("blur", removeFocus);
-
-    document.addEventListener("click", function(event) {
+    function handleDocumentClick(event) {
         if (!dropdown.contains(event.target) && event.target !== cityInput) {
             dropdown.style.display = "none";
         }
-    });
+    }
+    try {
+        cityInput.addEventListener("focus", onFocus);
+        cityInput.addEventListener("input", onInput);
+        cityInput.addEventListener("blur", removeFocus);
+        document.addEventListener("click", handleDocumentClick);
+    } catch (e) {
+        console.error("Error adding event listeners:", e);
+    }
 }
 
 dropdown();
 
 function inputValue(cityName) {
     const city = document.getElementById("city");
-    city.value = cityName; // Set the city input value
     const dropdown = document.getElementById("dropdown");
-    dropdown.style.display = "none"; // Close the dropdown after selection
+
+    if (typeof cityName === 'string') {
+        city.value = cityName; 
+    } else {
+        console.error("Invalid city name:", cityName);
+    }
+    
+    dropdown.style.display = "none"; 
 }
+
 
 // --------------------------------------------getting current weather-------------------------------
 async function fetchCurrentWeather(city) {
     const weatherReport = document.getElementById("weatherReport");
     const API = "a562058c790d145fb8252a7b0b5ed5b8";
     const currentWeatherAPI = `https://api.openweathermap.org/data/2.5/weather?appid=${API}&q=${city}&units=metric`;
-    // https://api.openweathermap.org/data/2.5/weather?appid=a562058c790d145fb8252a7b0b5ed5b8&q=delhi&units=metric
+
+
     try {
         const response = await fetch(currentWeatherAPI);
         
         if (!response.ok) {
-            throw new Error("Network response was not ok.");
+            throw new Error("Network response was not ok. Please check your connection.");
         }
 
         const data = await response.json();
 
+        // Check if the city was found
         if (data.cod !== 200) {
-            weatherReport.innerHTML = "City not found. Please enter a valid city name.";
-            return;
+            throw new Error(`City not found: ${data.message}. Please enter a valid city name.`);
         }
 
         displayWeather(data);
         fetchForecast(data.name); 
     } catch (error) {
-        weatherReport.innerHTML = `Error: ${error.message}`;
+
+        weatherReport.innerHTML = `
+            <div class="text-red-600 text-center font-bold p-4">
+                <p>Error: ${error.message}</p>
+            </div>
+        `;
     }
 }
 
@@ -141,7 +165,7 @@ function displayWeather(data) {
 
     // Full details
     const fullDetail = document.createElement("div");
-    fullDetail.className = "side-bar border xl:p-6 rounded-2xl shadow-lg shadow-white text-center w-75% max-w-[340px] mx-auto mt-4";
+    fullDetail.className = "side-bar border xl:p-8 rounded-2xl shadow-lg shadow-white text-center w-75% max-w-[340px] mx-auto mt-4 ";
     fullDetail.innerHTML = `
         <h2 class="heading font-bold mb-4 text-2xl text-red-800">Today's Highlights</h2>
         <div class="highlights grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -191,21 +215,26 @@ async function fetchForecast(city) {
     const forecastWeather = document.querySelector(".forecastWeather");
     const API = "a562058c790d145fb8252a7b0b5ed5b8";
     const forecastAPI = `https://api.openweathermap.org/data/2.5/forecast?appid=${API}&q=${city}&units=metric`;
-    // https://api.openweathermap.org/data/2.5/forecast?appid=a562058c790d145fb8252a7b0b5ed5b8&q=delhi&units=metric
 
     try {
         const response = await fetch(forecastAPI);
         if (!response.ok) {
-            throw new Error("Network response was not ok.");
+            throw new Error(`City not found. Please check the name: ${city}`);
         }
-        
+
         const data = await response.json();
         displayForecast(data);
     } catch (error) {
-        console.log(error);
-        forecastWeather.innerHTML = `Error: ${error.message}`;       
-    }    
+        console.error(error); // Log the error for debugging
+        forecastWeather.innerHTML = `
+            <div class="text-red-600 text-center font-bold p-4">
+                <p>Error: ${error.message}</p>
+                <p>Please try again with a different city.</p>
+            </div>
+        `;
+    }
 }
+
 
 // -------------------------display extended weather forecasts-------------------------------------------
 function displayForecast(data) {
@@ -213,13 +242,17 @@ function displayForecast(data) {
     forecastWeather.innerHTML = ""; // Clear previous forecast content
     data.list.forEach(item => {
         const forecastItem = document.createElement("div");
-        forecastItem.className = "forecast-item xl:px-2 rounded-2xl h-[22rem] mx-auto shadow-md shadow-white-500 hover:scale-95 duration-1000 md:p-2";
+        forecastItem.className = "forecast-item xl:px-2 rounded-2xl h-[22rem] w-auto mx-auto shadow-md shadow-white-500 hover:scale-95 duration-1000 md:p-2";
         forecastItem.innerHTML = `
-            <div class="p-1">${new Date(item.dt * 1000).toLocaleDateString()}</div>
+            <div class="p-1 h-">${new Date(item.dt * 1000).toLocaleDateString()}</div>
             <div class="p-1">${new Date(item.dt * 1000).toLocaleTimeString()}</div>
             <img class=" align-middle mx-auto overflow-hidden" src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" alt="Weather Icon">
-            <div class="font-extrabold overflow-hidden">${item.main.temp} °C</div>
-            <div class="capitalize overflow-hidden">${item.weather[0].description}</div>
+            <div class="font-extrabold ">${item.main.temp} °C</div>
+            <div class="capitalize font-extrabold ">${item.weather[0].description}</div>
+            <div class="text-[0.5rem]">Humidity:${item.main.humidity}%</div>
+            <div class="text-xs">Wind:${item.wind.speed} m/s</div>
+
+
         `;
         forecastWeather.appendChild(forecastItem);
     });
